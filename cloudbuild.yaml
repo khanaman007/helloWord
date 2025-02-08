@@ -1,23 +1,20 @@
 steps:
   # Step 1: Build the Docker image using Cloud Buildpacks (No Dockerfile required)
-  # - name: 'gcr.io/buildpacks/builder:v1'
-    # id: 'Build Application Image'
-    # args:
-      # - '.'  # Context directory, ensure this points to the root of the repository where pom.xml or build.gradle is located
-      
-  - name: 'gcr.io/cloud-builders/maven'
-    id: 'Build Spring Boot App'
+  - name: 'gcr.io/buildpacks/builder:v1'
+    id: 'Build Application Image'
     args:
-      - 'clean'
-      - 'install'
-      - '-DskipTests'
+      #- '-t'
+      #- 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Tag the image with the commit SHA
+      - '-builder'
+      - 'gcr.io/buildpacks/builder:v1'
+      - '.'  # Specify the directory containing your pom.xml file (root directory)
 
   # Step 2: Push the Docker image to Google Container Registry (GCR)
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push Docker Image to GCR'
+    id: 'Push Docker image'
     args:
       - 'push'
-      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Use the commit SHA as the image tag
+      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'
 
   # Step 3: Deploy the Docker image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -28,7 +25,7 @@ steps:
       - 'deploy'
       - 'helloworld'  # Name of the Cloud Run service
       - '--image'
-      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Image to deploy
+      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'
       - '--platform'
       - 'managed'
       - '--region'
@@ -44,7 +41,7 @@ timeout: '1200s'
 
 # Logging Configuration
 options:
-  logging: CLOUD_LOGGING_ONLY  # Send logs to Cloud Logging
+  logging: CLOUD_LOGGING_ONLY  # Send logs only to Cloud Logging
 
 # Logging bucket option, if needed
 #logs_bucket: 'gs://teak-environs-445405-g2.appspot.com'  # Specify your GCS bucket for logs
