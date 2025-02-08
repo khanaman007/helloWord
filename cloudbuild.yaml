@@ -1,9 +1,16 @@
 steps:
   # Step 1: Build the Docker image using Cloud Buildpacks (No Dockerfile required)
-  - name: 'gcr.io/buildpacks/builder:v1'
-    id: 'Build Application Image'
+  # - name: 'gcr.io/buildpacks/builder:v1'
+    # id: 'Build Application Image'
+    # args:
+      # - '.'  # Context directory, ensure this points to the root of the repository where pom.xml or build.gradle is located
+      
+  - name: 'gcr.io/cloud-builders/maven'
+    id: 'Build Spring Boot App'
     args:
-      - '.'  # Context directory, ensure this points to the root of the repository where pom.xml or build.gradle is located
+      - 'clean'
+      - 'install'
+      - '-DskipTests'
 
   # Step 2: Push the Docker image to Google Container Registry (GCR)
   - name: 'gcr.io/cloud-builders/docker'
