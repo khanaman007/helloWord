@@ -1,9 +1,8 @@
 steps:
-  # Step 1: Build the Docker image using Cloud Build
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Build Docker image'
+  # Step 1: Build the Docker image using Cloud Buildpacks (No Dockerfile required)
+  - name: 'gcr.io/buildpacks/builder'
+    id: 'Build Application Image'
     args:
-      - 'build'
       - '-t'
       - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Tag the image with the commit SHA
       - '.'
