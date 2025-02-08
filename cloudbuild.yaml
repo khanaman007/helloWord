@@ -3,16 +3,14 @@ steps:
   - name: 'gcr.io/buildpacks/builder:v1'
     id: 'Build Application Image'
     args:
-      #- '-t'
-      #- 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Tag the image with the commit SHA
-      - '.'
+      - '.'  # Context directory, ensure this points to the root of the repository where pom.xml or build.gradle is located
 
   # Step 2: Push the Docker image to Google Container Registry (GCR)
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push Docker image'
+    id: 'Push Docker Image to GCR'
     args:
       - 'push'
-      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'
+      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Use the commit SHA as the image tag
 
   # Step 3: Deploy the Docker image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -23,7 +21,7 @@ steps:
       - 'deploy'
       - 'helloworld'  # Name of the Cloud Run service
       - '--image'
-      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'
+      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Image to deploy
       - '--platform'
       - 'managed'
       - '--region'
@@ -39,7 +37,7 @@ timeout: '1200s'
 
 # Logging Configuration
 options:
-  logging: CLOUD_LOGGING_ONLY  # Send logs only to Cloud Logging
+  logging: CLOUD_LOGGING_ONLY  # Send logs to Cloud Logging
 
 # Logging bucket option, if needed
 #logs_bucket: 'gs://teak-environs-445405-g2.appspot.com'  # Specify your GCS bucket for logs
