@@ -1,6 +1,6 @@
 steps:
   # Step 1: Build the Docker image using Cloud Buildpacks (No Dockerfile required)
-  - name: 'gcr.io/buildpacks/builder'
+  - name: 'gcr.io/buildpacks/builder:v1'
     id: 'Build Application Image'
     args:
       #- '-t'
