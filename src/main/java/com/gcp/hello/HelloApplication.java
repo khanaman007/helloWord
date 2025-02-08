@@ -12,12 +12,5 @@ public class HelloApplication {
 		SpringApplication.run(HelloApplication.class, args);
 	}
 	
-	@RestController
-	class HelloController {
-	    @GetMapping("/hello")
-	    public String sayHello() {
-	        return "Hello, World!";
-	    }
-
-}
+	
 }
