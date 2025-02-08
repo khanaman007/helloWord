@@ -3,8 +3,8 @@ steps:
   - name: 'gcr.io/buildpacks/builder'
     id: 'Build Application Image'
     args:
-      - '-t'
-      - 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Tag the image with the commit SHA
+      #- '-t'
+      #- 'gcr.io/$_GCP_PROJECT_ID/helloworld:$COMMIT_SHA'  # Tag the image with the commit SHA
       - '.'
 
   # Step 2: Push the Docker image to Google Container Registry (GCR)
